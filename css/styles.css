@@ -1,0 +1,17 @@
+@import "bootstrap.min.css";
+
+.calc {
+    width: 300px;
+    margin: 0 auto;
+    padding-top: 40px;
+}
+
+.calc .screen {
+    width: 222px;
+}
+
+.calc .btn {
+    width: 50px;
+    height: 50px;
+    margin: 3px;
+}
