@@ -6,23 +6,55 @@ define([
     return Backbone.Model.extend({
 
         defaults: {
-            result: 0
+            curValue: 0,
+            display: 0,
+            operation: null
         },
 
-        plus: function (arg) {
-            this.set('result', this.get('result') + parseFloat(arg));
+        plus: function () {
+            this.set({
+                curValue: this.get('display'),
+                display: '',
+                operation: '+'
+            });
         },
 
-        minus: function (arg) {
-            this.set('result', this.get('result') - parseFloat(arg));
+        minus: function () {
+            this.set({
+                curValue: this.get('display'),
+                display: '',
+                operation: '-'
+            });
         },
 
-        multiply: function (arg) {
-            this.set('result', this.get('result') * parseFloat(arg));
+        multiply: function () {
+            this.set({
+                curValue: this.get('display'),
+                display: '',
+                operation: '*'
+            });
         },
 
-        divide: function (arg) {
-            this.set('result', this.get('result') / parseFloat(arg));
+        divide: function () {
+            this.set({
+                curValue: this.get('display'),
+                display: '',
+                operation: '/'
+            });
+        },
+
+        equal: function () {
+            var operation = this.get('operation');
+
+            if (operation === '+') {
+                this.set('display', parseFloat(this.get('curValue') + this.get('display')));
+            } else if (operation === '-') {
+                this.set('display', parseFloat(this.get('curValue') - this.get('display')));
+            } else if (operation === '*') {
+                this.set('display', parseFloat(this.get('curValue') * this.get('display')));
+            } else if (operation === '/') {
+                this.set('display', parseFloat(this.get('curValue') / this.get('display')));
+            }
         }
 
     });
