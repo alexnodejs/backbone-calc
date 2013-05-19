@@ -6,55 +6,78 @@ define([
     return Backbone.Model.extend({
 
         defaults: {
-            curValue: 0,
             display: 0,
-            operation: null
+            curValue: 0,
+            isNewNum: false,
+            pendingOperation: null
         },
 
-        plus: function () {
-            this.set({
-                curValue: this.get('display'),
-                display: '',
-                operation: '+'
-            });
+        _plus: function (arg) {
+            this.set('curValue', this.get('curValue') + parseFloat(arg));
         },
 
-        minus: function () {
-            this.set({
-                curValue: this.get('display'),
-                display: '',
-                operation: '-'
-            });
+        _minus: function (arg) {
+            this.set('curValue', this.get('curValue') - parseFloat(arg));
         },
 
-        multiply: function () {
-            this.set({
-                curValue: this.get('display'),
-                display: '',
-                operation: '*'
-            });
+        _multiply: function (arg) {
+            this.set('curValue', this.get('curValue') * parseFloat(arg));
         },
 
-        divide: function () {
-            this.set({
-                curValue: this.get('display'),
-                display: '',
-                operation: '/'
-            });
+        _divide: function (arg) {
+            this.set('curValue', this.get('curValue') / parseFloat(arg));
         },
 
-        equal: function () {
-            var operation = this.get('operation');
+        _equal: function (arg) {
+            this.set('curValue', parseFloat(arg));
+        },
 
-            if (operation === '+') {
-                this.set('display', parseFloat(this.get('curValue') + this.get('display')));
-            } else if (operation === '-') {
-                this.set('display', parseFloat(this.get('curValue') - this.get('display')));
-            } else if (operation === '*') {
-                this.set('display', parseFloat(this.get('curValue') * this.get('display')));
-            } else if (operation === '/') {
-                this.set('display', parseFloat(this.get('curValue') / this.get('display')));
+        inputDigit: function (digit) {
+            if (this.get('isNewNum')) {
+                this.set('display', digit);
+                this.set('isNewNum', false);
+            } else {
+                if (!this.get('display')) {
+                    this.set('display', digit);
+                } else {
+                    this.set('display', parseFloat(this.get('display') + digit));
+                }
             }
+        },
+
+        addDot: function () {
+            var out = this.get('display').toString();
+            if (this.get('isNewNum')) {
+                out = '0.';
+                this.set('isNewNum', false);
+            } else {
+                out.indexOf('.') === -1 ? out += '.' : null;
+            }
+            this.set('display', out);
+        },
+
+        countUp: function (operation) {
+            var out = this.get('display');
+
+            if (this.get('isNewNum') && this.get('pendingOperation') !== '=') {
+                this.set('display', this.get('curValue'));
+            } else {
+                this.set('isNewNum', true);
+                if (this.get('pendingOperation') === '+') {
+                    this._plus(out);
+                } else if (this.get('pendingOperation') === '-') {
+                    this._minus(out);
+                } else if (this.get('pendingOperation') === '*') {
+                    this._multiply(out);
+                } else if (this.get('pendingOperation') === '/') {
+                    this._divide(out);
+                } else {
+                    this._equal(out);
+                }
+
+                this.set('display', this.get('curValue'));
+            }
+            this.set('pendingOperation', operation);
         }
 
     });

@@ -19,38 +19,26 @@ define([
         },
 
         _addEvents: function () {
-            var self = this,
-                $screen = self.$el.find('.screen');
+            var self = this;
 
             // Refresh screen
             self.model.on('change:display', function (model, val) {
-                $screen.text(val);
+                self.$el.find('.screen').text(val);
             });
 
-            // Digits
-            self.$el.on('click', '.digit', function (event) {
-                self.model.set('display', parseFloat(self.model.get('display') + $(event.currentTarget).text()));
+            // Numbers
+            self.$el.on('click', '.digit', function () {
+                self.model.inputDigit($(this).text())
             });
 
-            // Actions
-            self.$el.on('click', '.plus', function () {
-                self.model.plus();
+            // Decimals
+            self.$el.on('click', '.dot', function () {
+                self.model.addDot();
             });
 
-            self.$el.on('click', '.minus', function () {
-                self.model.minus();
-            });
-
-            self.$el.on('click', '.multiply', function () {
-                self.model.multiply();
-            });
-
-            self.$el.on('click', '.divide', function () {
-                self.model.divide();
-            });
-
-            self.$el.on('click', '.equal', function () {
-                self.model.equal();
+            // Operations
+            self.$el.on('click', '.operation', function () {
+                self.model.countUp($(this).text());
             });
         }
 

@@ -2,10 +2,11 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'router'
-], function ($, _, Backbone, Router) {
+    'views/CalcView'
+], function ($, _, Backbone, CalcView) {
     var initialize = function () {
-        Router.initialize();
+        var calcView = new CalcView();
+        calcView.render();
     };
 
     return {
